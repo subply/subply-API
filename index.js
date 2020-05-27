@@ -23,13 +23,44 @@ app.listen(3000, () => {
         throw error;
       }
       database = client.db(DATABASE_NAME);
-      collection = database.collection("User");
+
       console.log("Connected to `" + DATABASE_NAME + "`!");
     }
   );
 });
 
-app.get("/video", (request, response) => {
+app.get("/api/video", (request, response) => {
+  collection = database.collection("Video");
+  collection.find({}).toArray((error, result) => {
+    if (error) {
+      return response.status(500).send(error);
+    }
+    response.send(result);
+  });
+});
+
+app.get("/api/user", (request, response) => {
+  collection = database.collection("User");
+  collection.find({}).toArray((error, result) => {
+    if (error) {
+      return response.status(500).send(error);
+    }
+    response.send(result);
+  });
+});
+
+app.get("/api/translate", (request, response) => {
+  collection = database.collection("Translate");
+  collection.find({}).toArray((error, result) => {
+    if (error) {
+      return response.status(500).send(error);
+    }
+    response.send(result);
+  });
+});
+
+app.get("/api/RawScript", (request, response) => {
+  collection = database.collection("RawScript");
   collection.find({}).toArray((error, result) => {
     if (error) {
       return response.status(500).send(error);
