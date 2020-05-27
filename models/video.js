@@ -1,22 +1,31 @@
 var mongoose = require("mongoose");
 
-var VideoSchema = mongoose.Schema({
-  id: {
-    type: String,
-    required: true,
+// var VideoSchema = new mongoose.Schema({
+//   _id: {
+//     type: mongoose.Schema.Types.ObjectId,
+//     required: true,
+//   },
+//   VideoUrl: {
+//     type: String,
+//     required: true,
+//   },
+//   Name: {
+//     type: String,
+//     required: true,
+//   },
+//   Thumbnail: {
+//     type: String,
+//     required: true,
+//   },
+// });
+
+var VideoSchema = new mongoose.Schema({
+  _id: {
+    type: mongoose.Schema.Types.ObjectId,
   },
-  VideoUrl: {
-    type: String,
-    required: true,
-  },
-  Name: {
-    type: String,
-    required: true,
-  },
-  Tumbnail: {
-    type: String,
-    required: true,
-  },
+  VideoUrl: String,
+  Name: String,
+  Thumbnail: String,
 });
 
 var Video = mongoose.model("video", VideoSchema);

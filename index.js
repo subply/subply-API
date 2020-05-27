@@ -1,72 +1,39 @@
-// var express = require("express");
-// var app = express();
+const Express = require("express");
+const BodyParser = require("body-parser");
+const MongoClient = require("mongodb").MongoClient;
+const ObjectId = require("mongodb").ObjectID;
 
-// const MongoClient = require("mongodb").MongoClient;
-// const uri =
-//   "mongodb+srv://admin:1234@cluster0-d2pqt.gcp.mongodb.net/test?retryWrites=true&w=majority";
-// const client = new MongoClient(uri, { useNewUrlParser: true });
-// client.connect((err) => {
-//   const collection = client.db("subply").collection("User");
-//   // perform actions on the collection object
-//   client.close();
-// });
+const CONNECTION_URL =
+  "mongodb+srv://admin:1234@cluster0-d2pqt.gcp.mongodb.net/test?retryWrites=true&w=majority";
+const DATABASE_NAME = "subply";
 
-// var express = require("express");
-// var app = express();
-// const mongoose = require("mongoose");
-// mongoose.connect(
-//   "mongodb+srv://admin:1234@cluster0-d2pqt.gcp.mongodb.net/test?retryWrites=true&w=majority"
-// );
-// const db = mongoose.connection;
-// db.on("error", console.error.bind(console, "connection error:"));
-// db.once("open", function () {
-//   console.log("mongoose connected");
-// });
+var app = Express();
 
-// // catch 404 and forward to error handler
-// app.use(function (req, res, next) {
-//   next(createError(404));
-// });
+app.use(BodyParser.json());
+app.use(BodyParser.urlencoded({ extended: true }));
 
-var express = require("express");
-var mongoose = require("mongoose");
-var bodyParser = require("body-parser");
-var app = express();
+var database, collection;
 
-// // DB setting
-mongoose.set("useNewUrlParser", true);
-mongoose.set("useFindAndModify", false);
-mongoose.set("useCreateIndex", true);
-mongoose.set("useUnifiedTopology", true);
-mongoose.connect(
-  "mongodb+srv://admin:1234@cluster0-d2pqt.gcp.mongodb.net/test?retryWrites=true&w=majority"
-);
-var db = mongoose.connection;
-
-db.once("open", function () {
-  console.log("DB connected");
+app.listen(3000, () => {
+  MongoClient.connect(
+    CONNECTION_URL,
+    { useNewUrlParser: true, useUnifiedTopology: true },
+    (error, client) => {
+      if (error) {
+        throw error;
+      }
+      database = client.db(DATABASE_NAME);
+      collection = database.collection("User");
+      console.log("Connected to `" + DATABASE_NAME + "`!");
+    }
+  );
 });
 
-db.on("error", function (err) {
-  console.log("DB ERROR : ", err);
-});
-
-// Other settings
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
-app.use(function (req, res, next) {
-  // 1
-  res.header("Access-Control-Allow-Origin", "*");
-  res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE");
-  res.header("Access-Control-Allow-Headers", "content-type");
-  next();
-});
-
-// API
-app.use("/api/video", require("./api/subply"));
-
-// Port setting
-var port = 3000;
-app.listen(port, function () {
-  console.log("server on:) http://localhost:" + port);
+app.get("/video", (request, response) => {
+  collection.find({}).toArray((error, result) => {
+    if (error) {
+      return response.status(500).send(error);
+    }
+    response.send(result);
+  });
 });
