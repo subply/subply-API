@@ -1,32 +1,24 @@
 var mongoose = require("mongoose");
 
-// var VideoSchema = new mongoose.Schema({
-//   _id: {
-//     type: mongoose.Schema.Types.ObjectId,
-//     required: true,
-//   },
-//   VideoUrl: {
-//     type: String,
-//     required: true,
-//   },
-//   Name: {
-//     type: String,
-//     required: true,
-//   },
-//   Thumbnail: {
-//     type: String,
-//     required: true,
-//   },
-// });
-
+//스키마 생성
 var VideoSchema = new mongoose.Schema({
-  _id: {
-    type: mongoose.Schema.Types.ObjectId,
+    VideoUrl: {
+      type: String,
+      required: true
+    },
+    Name: {
+      type: String,
+      required: true
+    },
+    Thumbnail: {
+      type: String,
+      required: true
+    },
   },
-  VideoUrl: String,
-  Name: String,
-  Thumbnail: String,
-});
+  { 
+    versionKey: false ,
+    collection: "Video" 
+  });
 
-var Video = mongoose.model("video", VideoSchema);
-module.exports = Video;
+var Video = mongoose.model("video", VideoSchema); //모델 생성
+module.exports = Video; //모델 내보내기
