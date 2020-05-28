@@ -1,70 +1,37 @@
 const Express = require("express");
 const BodyParser = require("body-parser");
-const MongoClient = require("mongodb").MongoClient;
-const ObjectId = require("mongodb").ObjectID;
-
+const mongoose = require("mongoose");
+const app = Express();
 const CONNECTION_URL =
-  "mongodb+srv://admin:1234@cluster0-d2pqt.gcp.mongodb.net/test?retryWrites=true&w=majority";
-const DATABASE_NAME = "subply";
-
-var app = Express();
+  "mongodb+srv://admin:1234@cluster0-d2pqt.gcp.mongodb.net/subply?retryWrites=true&w=majority";
 
 app.use(BodyParser.json());
 app.use(BodyParser.urlencoded({ extended: true }));
-
-var database, collection;
-
-app.listen(3000, () => {
-  MongoClient.connect(
-    CONNECTION_URL,
-    { useNewUrlParser: true, useUnifiedTopology: true },
-    (error, client) => {
-      if (error) {
-        throw error;
-      }
-      database = client.db(DATABASE_NAME);
-
-      console.log("Connected to `" + DATABASE_NAME + "`!");
-    }
-  );
+app.use(function (req, res, next) {
+  res.header("Access-Control-Allow-Origin", "*");
+  res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE");
+  res.header("Access-Control-Allow-Headers", "content-type");
+  next();
 });
 
-app.get("/api/video", (request, response) => {
-  collection = database.collection("Video");
-  collection.find({}).toArray((error, result) => {
-    if (error) {
-      return response.status(500).send(error);
-    }
-    response.send(result);
-  });
+app.use(Express.json()); // Make sure it comes back as json
+app.use("/video",require("./api/video.js"));
+app.use("/user",require("./api/user.js"));
+
+mongoose.connect(CONNECTION_URL, {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
 });
 
-app.get("/api/user", (request, response) => {
-  collection = database.collection("User");
-  collection.find({}).toArray((error, result) => {
-    if (error) {
-      return response.status(500).send(error);
-    }
-    response.send(result);
-  });
+const db = mongoose.connection;
+
+db.on("error", console.error.bind(console, "connection error:"));
+db.once("open", function () {
+  console.log("mongoose connected");
 });
 
-app.get("/api/translate", (request, response) => {
-  collection = database.collection("Translate");
-  collection.find({}).toArray((error, result) => {
-    if (error) {
-      return response.status(500).send(error);
-    }
-    response.send(result);
-  });
-});
-
-app.get("/api/RawScript", (request, response) => {
-  collection = database.collection("RawScript");
-  collection.find({}).toArray((error, result) => {
-    if (error) {
-      return response.status(500).send(error);
-    }
-    response.send(result);
-  });
+// Port setting
+var port = 3000;
+app.listen(port, function () {
+  console.log("server on:) http://localhost:" + port);
 });

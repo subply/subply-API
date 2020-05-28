@@ -1,7 +1,6 @@
 var mongoose = require("mongoose");
 
-var UserSchema = mongoose.Schema({
-  _id: { $oid: "5ec54e95736f614c0ff185df" },
+var UserSchema = new mongoose.Schema({
   Name: {
     type: String,
     required: true,
@@ -22,27 +21,24 @@ var UserSchema = mongoose.Schema({
     type: String,
     required: true,
   },
-  Videos: ["dd", "dd"],
-  Translations: ["ss", "ab"],
-  Votes: ["ss", "ss"],
+  Videos: [{
+    type:String
+  }],
+  Translations: [{
+    type:String
+  }],
+  Votes: [{
+    type:String
+  }],
   ContributedTime: {
-    type: Double,
+    type: Number,
     required: true,
+  }
   },
-});
+  { 
+  versionKey: false ,
+  collection: "User" 
+  });
 
 var User = mongoose.model("user", UserSchema);
 module.exports = User;
-
-// var UserSchema = mongoose.Schema({
-//   _id: { $oid: "5ec54e95736f614c0ff185df" },
-//   Name: "kim",
-//   UserId: "kim12",
-//   Password: "1234",
-//   Nickname: "kim",
-//   ProfileImage: "abc",
-//   Videos: ["dd", "dd"],
-//   Translations: ["ss", "ab"],
-//   Votes: ["ss", "ss"],
-//   ContributedTime: { $numberDouble: "1111.11" },
-// });

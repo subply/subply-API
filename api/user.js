@@ -4,8 +4,6 @@ var User = require("../models/user");
 
 // Index
 router.get("/", function (req, res, next) {
-  console.log("router activity");
-  // console.log(req.query);
   var query = {};
   if (req.query.name) query.name = { $regex: req.query.name, $options: "i" }; // 1
 
@@ -15,12 +13,31 @@ router.get("/", function (req, res, next) {
       if (err) {
         res.status(500);
         res.json({ success: false, message: err });
-        console.log("query error");
       } else {
         res.json({ success: true, data: users });
         console.log(users);
-        console.log("query success");
       }
+    });
+});
+
+// //craete document
+var user = new User({
+  Name: "ron",
+  UserId: "ron12",
+  Password: "1234",
+  Nickname: "rr",
+  ProfileImage: "ss",
+  Videos: ["aa","bb"],
+  Translations: ["trans1","trans2"],
+  Votes: ["script2","script2"],
+  ContributedTime: 10
+  });
+
+router.post("/", (req, res) => {
+  user.save()
+    .then((user) => res.send(user))
+    .catch((err) => {
+      res.status(500).send(err);
     });
 });
 
