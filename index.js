@@ -2,21 +2,32 @@ const Express = require("express");
 const BodyParser = require("body-parser");
 const mongoose = require("mongoose");
 const app = Express();
+const cors = require('cors');
+const corsOptions = {
+  origin: 'http://localhost:4200',
+  Credentials:true,
+}
 const CONNECTION_URL =
   "mongodb+srv://admin:1234@cluster0-d2pqt.gcp.mongodb.net/subply?retryWrites=true&w=majority";
 
 app.use(BodyParser.json());
 app.use(BodyParser.urlencoded({ extended: true }));
 app.use(function (req, res, next) {
-  res.header("Access-Control-Allow-Origin", "*");
+  // res.setHeader("Access-Control-Allow-Origin", req.header("origin"));
+  // res.setHeader("Access-Control-Allow-Credentials", "true");
+  // res.header("Access-Control-Allow-Origin", "*");
   res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE");
-  res.header("Access-Control-Allow-Headers", "content-type");
+  res.header(
+    "Access-Control-Allow-Headers",
+    "X-Requested-With, content-type, enctype"
+  );
   next();
 });
 
+app.use(cors(corsOptions));
 app.use(Express.json()); // Make sure it comes back as json
-app.use("/video",require("./api/video.js"));
-app.use("/user",require("./api/user.js"));
+app.use("/video", require("./api/video.js"));
+app.use("/user", require("./api/user.js"));
 
 mongoose.connect(CONNECTION_URL, {
   useNewUrlParser: true,

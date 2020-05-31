@@ -20,6 +20,16 @@ router.get("/", function (req, res, next) {
     });
 });
 
+router.get("/:userId", (req, res) => {
+  User.findOne({ UserId: req.params.userId })
+    .then((user) => {
+      res.send(user);
+    })
+    .catch((err) => {
+      res.status(500).send(err);
+    });
+});
+
 // //craete document
 var user = new User({
   Name: "ron",
@@ -27,14 +37,15 @@ var user = new User({
   Password: "1234",
   Nickname: "rr",
   ProfileImage: "ss",
-  Videos: ["aa","bb"],
-  Translations: ["trans1","trans2"],
-  Votes: ["script2","script2"],
-  ContributedTime: 10
-  });
+  Videos: ["aa", "bb"],
+  Translations: ["trans1", "trans2"],
+  Votes: ["script2", "script2"],
+  ContributedTime: 10,
+});
 
 router.post("/", (req, res) => {
-  user.save()
+  user
+    .save()
     .then((user) => res.send(user))
     .catch((err) => {
       res.status(500).send(err);

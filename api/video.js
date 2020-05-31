@@ -31,7 +31,8 @@ var video = new Video({
 });
 
 router.post("/", (req, res) => {
-  video.save()
+  video
+    .save()
     .then((video) => res.send(video))
     .catch((err) => {
       res.status(500).send(err);
