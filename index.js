@@ -13,9 +13,6 @@ const CONNECTION_URL =
 app.use(BodyParser.json());
 app.use(BodyParser.urlencoded({ extended: true }));
 app.use(function (req, res, next) {
-  // res.setHeader("Access-Control-Allow-Origin", req.header("origin"));
-  // res.setHeader("Access-Control-Allow-Credentials", "true");
-  // res.header("Access-Control-Allow-Origin", "*");
   res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE");
   res.header(
     "Access-Control-Allow-Headers",
