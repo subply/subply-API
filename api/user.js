@@ -35,27 +35,6 @@ router.post("/", (req, res) => {
     });
 });
 
-// var user = new User({
-//   Name: "ron",
-//   UserId: "ron12",
-//   Password: "1234",
-//   Nickname: "rr",
-//   ProfileImage: "ss",
-//   Videos: ["aa", "bb"],
-//   Translations: ["trans1", "trans2"],
-//   Votes: ["script2", "script2"],
-//   ContributedTime: 10,
-// });
-
-// router.post("/", (req, res) => {
-//   user
-//     .save()
-//     .then((user) => res.send(user))
-//     .catch((err) => {
-//       res.status(500).send(err);
-//     });
-// });
-
 router.patch("/userId", (req, res) => {
   User.findByIdAndUpdate(req.params.id, req.body)
     .save()

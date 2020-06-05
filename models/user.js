@@ -20,21 +20,7 @@ var UserSchema = new mongoose.Schema({
   ProfileImage: {
     type: String,
     required: true,
-  },
-  Videos: [{
-    type:String
-  }],
-  Translations: [{
-    type:String
-  }],
-  Votes: [{
-    type:String
-  }],
-  ContributedTime: {
-    type: Number,
-    required: true,
-  }
-  },
+  }},
   { 
   versionKey: false ,
   collection: "User" 
