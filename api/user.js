@@ -30,8 +30,42 @@ router.get("/:userId", (req, res) => {
     });
 });
 
+router.post('/join', (req, res)=>{
+  const userInfo = req.params;
+
+  const newUser = new User({
+    Name: userInfo.name,
+    UserId: userInfo.id,
+    Password: userInfo.password,
+    Nickname: userInfo.nickname,
+    ProfileImage: userInfo.profileImage? userInfo.profileImage : null,
+  });
+
+  newUser
+    .save()
+    .then((user)=> { return 1 })
+    .catch(err => res.status(500).send(err));
+  
+})
+
+router.post('/login', (req, res)=>{
+  const id = req.params.id;
+  const password = req.params.password;
+
+  User.findOne({UserId : id})
+  .then((user)=>{
+    if(user.password != password) return false;
+    res.send({
+      id: user.id,
+      // 기타 정보
+    });
+  })
+  .catch(err => res.status(500).send(err));
+
+})
+
 // //craete document
-var user = new User({
+const user = new User({
   Name: "ron",
   UserId: "ron12",
   Password: "1234",
