@@ -14,7 +14,7 @@ var UserInfoSchema = new mongoose.Schema({
   translate: [{
     type:String
   }],
-  ContributedTime: {
+  contributedTime: {
     type: Number,
     required: true,
   }

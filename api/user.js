@@ -20,7 +20,7 @@ router.get("/", function (req, res, next) {
 });
 
 router.get("/:userId", (req, res) => {
-  User.findOne({ UserId: req.params.userId })
+  User.findOne({ userId: req.params.userId })
     .then((user) => res.send(user))
     .catch((err) => res.status(500).send(err));
 });
@@ -45,7 +45,7 @@ router.patch("/:userId", (req, res) => {
 });
 
 router.delete("/:userId", (req, res) => {
-  User.findOneAndRemove({ UserId: req.params.userId })
+  User.findOneAndRemove({ userId: req.params.userId })
     .then(() => res.json({ success: true }))
     .catch((err) => {
       res.status(500).send(err);
