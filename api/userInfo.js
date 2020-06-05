@@ -27,7 +27,7 @@ router.get("/:userId", (req, res) => {
 
 router.post("/", (req, res) => {
   let userInfo = req.body;
-  UserInfo
+  userInfo
     .save()
     .then((userInfo) => res.send(userInfo))
     .catch((err) => {
@@ -35,8 +35,8 @@ router.post("/", (req, res) => {
     });
 });
 
-router.patch("/userId", (req, res) => {
-    UserInfo.findByIdAndUpdate(req.params.id, req.body)
+router.patch("/:userId", (req, res) => {
+    UserInfo.findByIdAndUpdate(req.params.userId, req.body)
     .save()
     .then(() => res.send({ success: true }))
     .catch((err) => {

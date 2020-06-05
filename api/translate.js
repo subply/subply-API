@@ -1,42 +1,42 @@
 var express = require("express");
 var router = express.Router();
-var User = require("../models/user");
+var Translate = require("../models/translate");
 
-router.get("/", function (req, res, next) {
+router.get("/", function (req, res) {
   var query = {};
   if (req.query.name) query.name = { $regex: req.query.name, $options: "i" };
 
-  User.find(query)
+  Translate.find(query)
     .sort({ _id: 1 })
-    .exec(function (err, users) {
+    .exec(function (err, translates) {
       if (err) {
         res.status(500);
         res.json({ success: false, message: err });
       } else {
-        res.json({ success: true, data: users });
-        console.log(users);
+        res.json({ success: true, data: translates });
+        console.log(translates);
       }
     });
 });
 
-router.get("/:userId", (req, res) => {
-  User.findOne({ UserId: req.params.userId })
-    .then((user) => res.send(user))
+router.get("/:videoId", (req, res) => {
+    Translate.findOne({ videoId: req.params.videoId })
+    .then((translate) => res.send(translate))
     .catch((err) => res.status(500).send(err));
 });
 
 router.post("/", (req, res) => {
-  let user = req.body;
-  user
+  let translate = req.body;
+  translate
     .save()
-    .then((user) => res.send(user))
+    .then((translate) => res.send(translate))
     .catch((err) => {
       res.status(500).send(err);
     });
 });
 
-router.patch("/:userId", (req, res) => {
-  User.findByIdAndUpdate(req.params.userId, req.body)
+router.patch("/:videoId", (req, res) => {
+    Translate.findByIdAndUpdate(req.params.videoId, req.body)
     .save()
     .then(() => res.send({ success: true }))
     .catch((err) => {
@@ -44,8 +44,8 @@ router.patch("/:userId", (req, res) => {
     });
 });
 
-router.delete("/:userId", (req, res) => {
-  User.findOneAndRemove({ UserId: req.params.userId })
+router.delete("/:videoId", (req, res) => {
+    Translate.findOneAndRemove({ videoId: req.params.videoId })
     .then(() => res.json({ success: true }))
     .catch((err) => {
       res.status(500).send(err);
