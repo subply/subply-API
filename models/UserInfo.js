@@ -5,9 +5,6 @@ var UserInfoSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  videos: [{
-    type:String
-  }],
   votes: [{
     type:String
   }],

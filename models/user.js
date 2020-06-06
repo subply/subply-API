@@ -17,7 +17,7 @@ var UserSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  profileImage: {
+  profilePhoto: {
     type: String,
     
   }},
