@@ -23,8 +23,9 @@ app.use(function (req, res, next) {
 
 app.use(cors(corsOptions));
 app.use(Express.json()); // Make sure it comes back as json
-app.use("/video", require("./api/video.js"));
+app.use("/translation", require("./api/translation.js"));
 app.use("/user", require("./api/user.js"));
+app.use("/userInfo",require("./api/userInfo.js"));
 
 mongoose.connect(CONNECTION_URL, {
   useNewUrlParser: true,
