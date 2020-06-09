@@ -1,40 +1,26 @@
 var mongoose = require("mongoose");
 
 var UserSchema = new mongoose.Schema({
-  Name: {
+  name: {
     type: String,
     required: true,
   },
-  UserId: {
+  userId: {
     type: String,
     required: true,
   },
-  Password: {
+  password: {
     type: String,
     required: true,
   },
-  Nickname: {
+  nickname: {
     type: String,
     required: true,
   },
-  ProfileImage: {
+  profilePhoto: {
     type: String,
-    required: true,
-  },
-  Videos: [{
-    type:String
-  }],
-  Translations: [{
-    type:String
-  }],
-  Votes: [{
-    type:String
-  }],
-  ContributedTime: {
-    type: Number,
-    required: true,
-  }
-  },
+    
+  }},
   { 
   versionKey: false ,
   collection: "User" 

@@ -13,9 +13,6 @@ const CONNECTION_URL =
 app.use(BodyParser.json());
 app.use(BodyParser.urlencoded({ extended: true }));
 app.use(function (req, res, next) {
-  // res.setHeader("Access-Control-Allow-Origin", req.header("origin"));
-  // res.setHeader("Access-Control-Allow-Credentials", "true");
-  // res.header("Access-Control-Allow-Origin", "*");
   res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE");
   res.header(
     "Access-Control-Allow-Headers",
@@ -26,8 +23,9 @@ app.use(function (req, res, next) {
 
 app.use(cors(corsOptions));
 app.use(Express.json()); // Make sure it comes back as json
-app.use("/video", require("./api/video.js"));
+app.use("/translation", require("./api/translation.js"));
 app.use("/user", require("./api/user.js"));
+app.use("/userInfo",require("./api/userInfo.js"));
 
 mongoose.connect(CONNECTION_URL, {
   useNewUrlParser: true,
