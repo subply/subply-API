@@ -29,6 +29,7 @@ app.use(Express.json()); // Make sure it comes back as json
 app.use("/video", require("./api/video.js"));
 app.use("/user", require("./api/user.js"));
 
+mongoose.Promise = global.Promise;
 mongoose.connect(CONNECTION_URL, {
   useNewUrlParser: true,
   useUnifiedTopology: true,

@@ -30,7 +30,7 @@ router.get("/:userId", (req, res) => {
     });
 });
 
-router.post('/join', (req, res)=>{
+router.post('/join', (req, res) => {
   const userInfo = req.params;
 
   const newUser = new User({
@@ -38,29 +38,31 @@ router.post('/join', (req, res)=>{
     UserId: userInfo.id,
     Password: userInfo.password,
     Nickname: userInfo.nickname,
-    ProfileImage: userInfo.profileImage? userInfo.profileImage : null,
+    ProfileImage: userInfo.profileImage ? userInfo.profileImage : null,
   });
 
   newUser
     .save()
-    .then((user)=> { return 1 })
+    .then((user) => { return 1 })
     .catch(err => res.status(500).send(err));
-  
+
 })
 
-router.post('/login', (req, res)=>{
-  const id = req.params.id;
-  const password = req.params.password;
-
-  User.findOne({UserId : id})
-  .then((user)=>{
-    if(user.password != password) return false;
-    res.send({
-      id: user.id,
-      // 기타 정보
-    });
-  })
-  .catch(err => res.status(500).send(err));
+router.post('/login', async (req, res) => {
+  console.log("login in");
+  const id = req.body.id;
+  const password = req.body.password;
+  try {
+    const chk = await User.findOne({ userId: id })
+      .then((user)=>{
+        if (!user) res.sendStatus(401).send("User Not Found");
+        return user.password === password;
+      })
+    if(!chk) return res.send({"login" : 0});
+    res.send({"login" : 1})
+  } catch (e) {
+    res.sendStatus(500).send("Server - login error");
+  }
 
 })
 
