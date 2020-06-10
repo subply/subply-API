@@ -31,9 +31,9 @@ router.get("/video/:videoId/script/:order",(req,res)=>{
   let q1 = {"videoId":req.params.videoId};
   let order = new Number(req.params.order);
 
-  Translation.findOne(q1,{ scripts.ob:true }).skip(order)
-  .then((translations)=> res.send(translations)) 
-  .catch(err=> res.status(500).send(err));
+  // Translation.findOne(q1,{ scripts.ob:true }).skip(order)
+  // .then((translations)=> res.send(translations)) 
+  // .catch(err=> res.status(500).send(err));
 });
 
 router.post("/", (req, res) => {
