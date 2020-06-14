@@ -20,20 +20,21 @@ router.get("/", function (req, res) {
 });
 
 router.get("/:videoId", (req, res) => {
-    Translation.findOne({ videoId: req.params.videoId })
+  Translation.findOne({ videoId: req.params.videoId })
     .then((translation) => res.send(translation))
     .catch((err) => res.status(500).send(err));
 });
 
-
 //video의 i번째 스크립트의 translations 가져오기.
-router.get("/video/:videoId/script/:order",(req,res)=>{
-  let q1 = {"videoId":req.params.videoId};
-  let order = new Number(req.params.order);
+router.get("/video/:videoId/script/:scriptIndex", (req, res) => {
+  let query = { videoId: req.params.videoId };
+  let scriptIndex = new Number(req.params.scriptIndex);
 
-  Translation.findOne(q1,{ scripts.ob:true }).skip(order)
-  .then((translations)=> res.send(translations)) 
-  .catch(err=> res.status(500).send(err));
+  // Translation.findOne(query, { scripts: true })
+  Translation.findOne(query)
+    .skip(scriptIndex)
+    .then((translations) => res.send(translations))
+    .catch((err) => res.status(500).send(err));
 });
 
 router.post("/", (req, res) => {
@@ -47,7 +48,7 @@ router.post("/", (req, res) => {
 });
 
 router.patch("/:videoId", (req, res) => {
-    Translation.findByIdAndUpdate(req.params.videoId, req.body)
+  Translation.findByIdAndUpdate(req.params.videoId, req.body)
     .save()
     .then(() => res.send({ success: true }))
     .catch((err) => {
@@ -56,7 +57,7 @@ router.patch("/:videoId", (req, res) => {
 });
 
 router.delete("/:videoId", (req, res) => {
-    Translation.findOneAndRemove({ videoId: req.params.videoId })
+  Translation.findOneAndRemove({ videoId: req.params.videoId })
     .then(() => res.json({ success: true }))
     .catch((err) => {
       res.status(500).send(err);
