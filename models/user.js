@@ -19,8 +19,26 @@ var UserSchema = new mongoose.Schema({
   },
   profilePhoto: {
     type: String,
-    
-  }},
+    required: true,
+  },
+  password: {
+    type: String,
+    required: true,
+  },
+  Videos: [{
+    type:String
+  }],
+  Translations: [{
+    type:String
+  }],
+  Votes: [{
+    type:String
+  }],
+  ContributedTime: {
+    type: Number,
+    required: true,
+  }
+  },
   { 
   versionKey: false ,
   collection: "User" 

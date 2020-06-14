@@ -27,6 +27,7 @@ app.use("/translation", require("./api/translation.js"));
 app.use("/user", require("./api/user.js"));
 app.use("/userInfo",require("./api/userInfo.js"));
 
+mongoose.Promise = global.Promise;
 mongoose.connect(CONNECTION_URL, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
