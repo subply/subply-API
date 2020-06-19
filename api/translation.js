@@ -30,7 +30,7 @@ router.get("/video/:videoId/script/:scriptIndex", (req, res) => {
   let query = { videoId: req.params.videoId };
   let scriptIndex = new Number(req.params.scriptIndex);
 
-Translation.findOne(query)
+  Translation.findOne(query)
     .skip(scriptIndex)
     .then((translations) => res.send(translations))
     .catch((err) => res.status(500).send(err));
