@@ -51,8 +51,7 @@ router.post('/join', (req, res) => {
 
 router.post('/login', async (req, res) => {
   console.log("login in");
-  const id = req.body.id;
-  const password = req.body.password;
+  const {id, password} = req.body;
   try {
     const chk = await User.findOne({ userId: id })
       .then((user)=>{
