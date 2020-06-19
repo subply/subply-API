@@ -40,15 +40,13 @@ router.put("/:videoId", (req, res)=>{
   const {videoId} = req.params;
   const {userId, translated, votes, index} = req.body;
   Translation.findOneAndUpdate({videoId : videoId}).then((res)=>{
-    // const {scripts} = res.subplies[index];
     res.scripts[index].subplies.push({
       votes,
       userId,
       translated
     });
-
-    res.save();
     
+    res.save();
   })
 
 
