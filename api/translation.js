@@ -37,16 +37,26 @@ router.get("/video/:videoId/script/:scriptIndex", (req, res) => {
 });
 
 router.put("/:videoId", (req, res)=>{
+  console.log("Put New Reply in");
   const {videoId} = req.params;
   const {userId, translated, votes, index} = req.body;
-  Translation.findOneAndUpdate({videoId : videoId}).then((res)=>{
-    res.scripts[index].subplies.push({
+
+  Translation.findOneAndUpdate({videoId : videoId}).then((translation, err)=>{
+    if(err) return res.status(500).send("Cannot find Translation");
+    
+    let targetScript = translation.scripts[index];
+    if(!targetScript) return res.status(500).send("Cannot find Replies"); 
+  
+    targetScript.subplies.push({
       votes,
       userId,
       translated
     });
     
-    res.save();
+    translation.save((err)=>{
+      if(err) return res.status(500).send(err);
+      return res.status(200).send(200);
+    });
   })
 
 

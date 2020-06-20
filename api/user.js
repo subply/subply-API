@@ -22,7 +22,7 @@ router.get("/", function (req, res, next) {
 
 router.get("/:userId", (req, res) => {
   console.log("mypage in");
-  User.findOne({ UserId: req.params.userId })
+  User.findOne({ userId: req.params.userId })
     .then((user) => {
       res.send(user);
     })
@@ -31,7 +31,7 @@ router.get("/:userId", (req, res) => {
     });
 });
 
-router.post('/join', (req, res) => {
+router.post("/join", (req, res) => {
   const userInfo = req.params;
 
   const newUser = new User({
@@ -44,39 +44,25 @@ router.post('/join', (req, res) => {
 
   newUser
     .save()
-    .then((user) => { return 1 })
-    .catch(err => res.status(500).send(err));
+    .then((user) => {
+      return 1;
+    })
+    .catch((err) => res.status(500).send(err));
+});
 
-})
-
-router.post('/login', async (req, res) => {
+router.post("/login", async (req, res) => {
   console.log("login in");
   const {id, password} = req.body;
   try {
-    const chk = await User.findOne({ userId: id })
-      .then((user)=>{
-        if (!user) res.sendStatus(401).send("User Not Found");
-        return user.password === password;
-      })
-    if(!chk) return res.send({"login" : 0});
-    res.send({"login" : 1})
+    const chk = await User.findOne({ userId: id }).then((user) => {
+      if (!user) res.sendStatus(401).send("User Not Found");
+      return user.password === password;
+    });
+    if (!chk) return res.send({ login: 0 });
+    res.send({ login: 1 });
   } catch (e) {
     res.sendStatus(500).send("Server - login error");
   }
-
-})
-
-// //craete document
-const user = new User({
-  Name: "ron",
-  UserId: "ron12",
-  Password: "1234",
-  Nickname: "rr",
-  ProfileImage: "ss",
-  Videos: ["aa", "bb"],
-  Translations: ["trans1", "trans2"],
-  Votes: ["script2", "script2"],
-  ContributedTime: 10,
 });
 
 router.post("/", (req, res) => {
@@ -86,6 +72,24 @@ router.post("/", (req, res) => {
     .catch((err) => {
       res.status(500).send(err);
     });
+});
+
+router.patch("/:userId", (req, res) => {
+  const query = { userId: req.params.userId };
+  const altered = {
+    password: req.body.password,
+    nickname: req.body.nickname,
+    profilePhoto: req.body.profilePhoto,
+  };
+
+  User.findOneAndUpdate(query, altered, { new: true }, (err, doc) => {
+    if (err) {
+      console.log(err);
+      res.status(500).send(err);
+    } else {
+      res.send(doc);
+    }
+  });
 });
 
 module.exports = router;
