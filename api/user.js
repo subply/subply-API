@@ -65,15 +65,6 @@ router.post("/login", async (req, res) => {
   }
 });
 
-router.post("/", (req, res) => {
-  user
-    .save()
-    .then((user) => res.send(user))
-    .catch((err) => {
-      res.status(500).send(err);
-    });
-});
-
 router.patch("/:userId", (req, res) => {
   const query = { userId: req.params.userId };
   const altered = {
