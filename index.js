@@ -2,13 +2,14 @@ const Express = require("express");
 const BodyParser = require("body-parser");
 const mongoose = require("mongoose");
 const app = Express();
-const cors = require('cors');
+const cors = require("cors");
 const corsOptions = {
-  origin: 'http://localhost:4200',
-  Credentials:true,
-}
+  origin: "http://localhost:4200",
+  Credentials: true,
+};
 const CONNECTION_URL =
   "mongodb+srv://admin:1234@cluster0-d2pqt.gcp.mongodb.net/subply?retryWrites=true&w=majority";
+mongoose.set("useFindAndModify", false);
 
 app.use(BodyParser.json());
 app.use(BodyParser.urlencoded({ extended: true }));
@@ -25,7 +26,7 @@ app.use(cors(corsOptions));
 app.use(Express.json()); // Make sure it comes back as json
 app.use("/translation", require("./api/translation.js"));
 app.use("/user", require("./api/user.js"));
-app.use("/userInfo",require("./api/userInfo.js"));
+app.use("/userInfo", require("./api/userInfo.js"));
 
 mongoose.Promise = global.Promise;
 mongoose.connect(CONNECTION_URL, {

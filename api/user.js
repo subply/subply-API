@@ -77,19 +77,20 @@ router.post("/", (req, res) => {
 
 router.patch("/:userId", (req, res) => {
   const query = { userId: req.params.userId };
-  User.find(query)
-    .findOneAndUpdate({
-      password: req.body.password,
-      nickname: req.body.nickname,
-      profilePhoto: req.body.profilePhoto,
-    })
-    .then((res) => {
-      console.log("결과: " + res); //find 결과
-      //res.send(user);
-    })
-    .catch((err) => {
+  const altered = {
+    password: req.body.password,
+    nickname: req.body.nickname,
+    profilePhoto: req.body.profilePhoto,
+  };
+
+  User.findOneAndUpdate(query, altered, { new: true }, (err, doc) => {
+    if (err) {
+      console.log(err);
       res.status(500).send(err);
-    });
+    } else {
+      res.send(doc);
+    }
+  });
 });
 
 module.exports = router;
