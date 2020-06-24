@@ -32,6 +32,7 @@ mongoose.Promise = global.Promise;
 mongoose.connect(CONNECTION_URL, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
+  useFindAndModify : false
 });
 
 const db = mongoose.connection;
