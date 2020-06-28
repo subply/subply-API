@@ -32,20 +32,20 @@ router.get("/:userId", (req, res) => {
 });
 
 router.post("/join", (req, res) => {
-  const userInfo = req.params;
+  const {name, id, password, nickname, profileImage} = req.params;
 
   const newUser = new User({
-    Name: userInfo.name,
-    UserId: userInfo.id,
-    Password: userInfo.password,
-    Nickname: userInfo.nickname,
-    ProfileImage: userInfo.profileImage ? userInfo.profileImage : null,
+    Name: name,
+    UserId: id,
+    Password: password,
+    Nickname: nickname,
+    ProfileImage: profileImage ? profileImage : null,
   });
 
   newUser
     .save()
     .then((user) => {
-      return 1;
+      if(user) return res.status(200).send({ join : 1 });
     })
     .catch((err) => res.status(500).send(err));
 });

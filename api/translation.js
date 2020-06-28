@@ -41,8 +41,8 @@ router.put("/:videoId", (req, res)=>{
   const {videoId} = req.params;
   const {userId, translated, votes, index} = req.body;
 
-  Translation.findOneAndUpdate({videoId : videoId}).then((translation, err)=>{
-    if(err) return res.status(500).send("Cannot find Translation");
+  Translation.findOne({videoId : videoId}).then((translation, err)=>{
+    if(err || !translation) return res.status(500).send("Cannot find Translation");
     
     let targetScript = translation.scripts[index];
     if(!targetScript) return res.status(500).send("Cannot find Replies"); 
@@ -55,11 +55,9 @@ router.put("/:videoId", (req, res)=>{
     
     translation.save((err)=>{
       if(err) return res.status(500).send(err);
-      return res.status(200).send(200);
+      return res.sendStatus(200);
     });
   })
-
-
 })
 
 router.post("/", (req, res) => {
