@@ -28,7 +28,29 @@ router.get("/:videoId", (req, res) => {
 });
 
 router.post("/:videoId", (req, res)=>{
-  console.log("Init In");
+  console.log("Init Video In");
+  const {videoId} = req.params;
+  const data = req.body;
+  
+  let scripts = [];
+
+  data.forEach(({script})=>{
+    scripts.push({
+      subplies : [],
+      raw : script
+    })
+  })
+  
+  let newVideo = new Translation({
+    videoId,
+    scripts
+  });
+
+  newVideo.save((result, err) => {
+    if(err || !result) return res.status(500).send(err);
+    return res.sendStatus(200);
+  })
+
 })
 
 // vote 순
