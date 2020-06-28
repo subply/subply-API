@@ -20,24 +20,16 @@ router.get("/", function (req, res) {
 });
 
 router.get("/:videoId", (req, res) => {
-  Translation.findOne({ videoId: req.params.videoId })
+  console.log("Get Subplies in");
+  const {videoId} = req.params;
+  Translation.findOne({ videoId: videoId })
     .then((translation) => res.send(translation))
     .catch((err) => res.status(500).send(err));
 });
 
-//Not used
-router.get("/video/:videoId/script/:scriptIndex", (req, res) => {
-  let query = { videoId: req.params.videoId };
-  let scriptIndex = new Number(req.params.scriptIndex);
-
-  Translation.findOne(query)
-    .then((translations) => {
-      let scripts = translations[scriptIndex];
-      console.log(scripts);
-      // res.send(translations);
-    })
-    .catch((err) => res.status(500).send(err));
-});
+router.post("/:videoId", (req, res)=>{
+  console.log("Init In");
+})
 
 // vote 순
 router.get("/video/:videoId/script/:scriptIndex/vote", (req, res) => {
