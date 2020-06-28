@@ -7,7 +7,7 @@ router.get("/", function (req, res) {
   if (req.query.name) query.name = { $regex: req.query.name, $options: "i" };
 
   Translation.find(query)
-    .sort({ _id: 1 })
+    .sort({ _id: -1 })
     .exec(function (err, translations) {
       if (err) {
         res.status(500);
@@ -25,18 +25,36 @@ router.get("/:videoId", (req, res) => {
     .catch((err) => res.status(500).send(err));
 });
 
-//video의 i번째 스크립트의 translations 가져오기.
+//Not used
 router.get("/video/:videoId/script/:scriptIndex", (req, res) => {
   let query = { videoId: req.params.videoId };
   let scriptIndex = new Number(req.params.scriptIndex);
 
   Translation.findOne(query)
-    .skip(scriptIndex)
-    .then((translations) => res.send(translations))
+    .then((translations) => {
+      let scripts = translations[scriptIndex];
+      console.log(scripts);
+      // res.send(translations);
+    })
     .catch((err) => res.status(500).send(err));
 });
 
-router.put("/:videoId", (req, res)=>{
+// vote 순
+router.get("/video/:videoId/script/:scriptIndex/vote", (req, res) => {
+  var query = { videoId: req.params.videoId };
+  let scriptIndex = req.params.scriptIndex;
+  console.log("get method");
+
+  Translation.findOne(query)
+    .then((translation) => {
+      console.log("findOne success");
+      let scripts = translation.scripts[scriptIndex];
+      console.log(scripts);
+    })
+    .catch((err) => res.status(500).send(err));
+});
+
+router.put("/:videoId", (req, res) => {
   console.log("Put New Reply in");
   const {videoId} = req.params;
   const {userId, translated, votes, index} = req.body;
