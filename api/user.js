@@ -31,21 +31,22 @@ router.get("/:userId", (req, res) => {
     });
 });
 
-router.post("/join", (req, res) => {
-  const {name, id, password, nickname, profileImage} = req.params;
+router.post("/", (req, res) => {
+  console.log("Join in");
+  const {name, id, password, nickname, profilePhoto} = req.body;
 
   const newUser = new User({
-    Name: name,
-    UserId: id,
-    Password: password,
-    Nickname: nickname,
-    ProfileImage: profileImage ? profileImage : null,
+    name,
+    userId: id,
+    password: password,
+    nickname: nickname,
+    profilePhoto: profilePhoto ? profilePhoto : null,
   });
 
   newUser
     .save()
     .then((user) => {
-      if(user) return res.status(200).send({ join : 1 });
+      if(user) return res.sendStatus(200);
     })
     .catch((err) => res.status(500).send(err));
 });
