@@ -20,39 +20,63 @@ router.get("/", function (req, res) {
 });
 
 router.get("/:videoId", (req, res) => {
-  Translation.findOne({ videoId: req.params.videoId })
+  console.log("Get Subplies in");
+  const {videoId} = req.params;
+  Translation.findOne({ videoId: videoId })
     .then((translation) => res.send(translation))
     .catch((err) => res.status(500).send(err));
 });
 
-router.put("/:videoId", (req, res) => {
-  const { videoId } = req.params;
-  const { userId, translated, votes, index } = req.body;
-  console.log("Put New Reply in : " + videoId);
 
-  Translation.findOne({ videoId: videoId })
-    .then((translation) => {
-      console.log("메서드 결과 찾은 tran의 videoId: " + translation.videoId);
-      let targetScript = translation.scripts[index];
+router.post("/:videoId", (req, res)=>{
+  console.log("Init Video In");
+  const {videoId} = req.params;
+  const data = req.body;
+  
+  let scripts = [];
 
-      if (!targetScript) {
-        return res.status(500).send("Cannot find Replies");
-      }
-      targetScript.subplies.push({
-        votes,
-        userId,
-        translated,
-      });
-
-      translation.save((err) => {
-        if (err) return res.status(500).send(err);
-        return res.send(translation);
-      });
+  data.forEach(({script})=>{
+    scripts.push({
+      subplies : [],
+      raw : script
     })
-    .catch((err) => {
-      return res.status(500).send("Cannot find Translation");
+  })
+  
+  let newVideo = new Translation({
+    videoId,
+    scripts
+  });
+
+  newVideo.save((result, err) => {
+    if(err || !result) return res.status(500).send(err);
+    return res.sendStatus(200);
+  })
+
+})
+
+router.put("/:videoId", (req, res) => {
+  console.log("Put New Reply in");
+  const {videoId} = req.params;
+  const {userId, translated, votes, index} = req.body;
+
+  Translation.findOne({videoId : videoId}).then((translation, err)=>{
+    if(err || !translation) return res.status(500).send("Cannot find Translation");
+    
+    let targetScript = translation.scripts[index];
+    if(!targetScript) return res.status(500).send("Cannot find Replies"); 
+  
+    targetScript.subplies.push({
+      votes,
+      userId,
+      translated
     });
-});
+    
+    translation.save((err)=>{
+      if(err) return res.status(500).send(err);
+      return res.send(translation);
+    });
+  })
+})
 
 router.post("/", (req, res) => {
   let translation = req.body;
