@@ -27,6 +27,7 @@ router.get("/:videoId", (req, res) => {
     .catch((err) => res.status(500).send(err));
 });
 
+
 router.post("/:videoId", (req, res)=>{
   console.log("Init Video In");
   const {videoId} = req.params;
@@ -53,21 +54,6 @@ router.post("/:videoId", (req, res)=>{
 
 })
 
-// vote 순
-router.get("/video/:videoId/script/:scriptIndex/vote", (req, res) => {
-  var query = { videoId: req.params.videoId };
-  let scriptIndex = req.params.scriptIndex;
-  console.log("get method");
-
-  Translation.findOne(query)
-    .then((translation) => {
-      console.log("findOne success");
-      let scripts = translation.scripts[scriptIndex];
-      console.log(scripts);
-    })
-    .catch((err) => res.status(500).send(err));
-});
-
 router.put("/:videoId", (req, res) => {
   console.log("Put New Reply in");
   const {videoId} = req.params;
@@ -87,7 +73,7 @@ router.put("/:videoId", (req, res) => {
     
     translation.save((err)=>{
       if(err) return res.status(500).send(err);
-      return res.sendStatus(200);
+      return res.send(translation);
     });
   })
 })
@@ -103,6 +89,7 @@ router.post("/", (req, res) => {
 });
 
 router.patch("/:videoId", (req, res) => {
+  console.log(req.params.videoId);
   Translation.findByIdAndUpdate(req.params.videoId, req.body)
     .save()
     .then(() => res.send({ success: true }))
@@ -116,6 +103,26 @@ router.delete("/:videoId", (req, res) => {
     .then(() => res.json({ success: true }))
     .catch((err) => {
       res.status(500).send(err);
+    });
+});
+
+router.patch("/subply/:videoId", (req, res) => {
+  const { videoId } = req.params;
+  const { scriptIndex, _id } = req.body;
+
+  Translation.findOne({ videoId: videoId })
+    .then((translation) => {
+      let targetScript = translation.scripts[scriptIndex];
+      targetScript.subplies.pull({ _id: _id });
+
+      translation.save((err) => {
+        if (err) return res.status(500).send(err);
+        return res.send(translation);
+      });
+    })
+    .catch((err) => {
+      console.log(err);
+      return res.status(500).send("Cannot find Translation");
     });
 });
 
