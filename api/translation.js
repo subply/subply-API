@@ -1,6 +1,7 @@
 var express = require("express");
 var router = express.Router();
 var Translation = require("../models/translation");
+const mongoose = require("mongoose");
 
 router.get("/", function (req, res) {
   var query = {};
@@ -21,62 +22,61 @@ router.get("/", function (req, res) {
 
 router.get("/:videoId", (req, res) => {
   console.log("Get Subplies in");
-  const {videoId} = req.params;
+  const { videoId } = req.params;
   Translation.findOne({ videoId: videoId })
     .then((translation) => res.send(translation))
     .catch((err) => res.status(500).send(err));
 });
 
-
-router.post("/:videoId", (req, res)=>{
+router.post("/:videoId", (req, res) => {
   console.log("Init Video In");
-  const {videoId} = req.params;
+  const { videoId } = req.params;
   const data = req.body;
-  
+
   let scripts = [];
 
-  data.forEach(({script})=>{
+  data.forEach(({ script }) => {
     scripts.push({
-      subplies : [],
-      raw : script
-    })
-  })
-  
+      subplies: [],
+      raw: script,
+    });
+  });
+
   let newVideo = new Translation({
     videoId,
-    scripts
+    scripts,
   });
 
   newVideo.save((result, err) => {
-    if(err || !result) return res.status(500).send(err);
+    if (err || !result) return res.status(500).send(err);
     return res.sendStatus(200);
-  })
-
-})
+  });
+});
 
 router.put("/:videoId", (req, res) => {
   console.log("Put New Reply in");
-  const {videoId} = req.params;
-  const {userId, translated, votes, index} = req.body;
+  const { videoId } = req.params;
+  const { userId, translated, votes, index } = req.body;
 
-  Translation.findOne({videoId : videoId}).then((translation, err)=>{
-    if(err || !translation) return res.status(500).send("Cannot find Translation");
-    
+  Translation.findOne({ videoId: videoId }).then((translation, err) => {
+    if (err || !translation)
+      return res.status(500).send("Cannot find Translation");
+
     let targetScript = translation.scripts[index];
-    if(!targetScript) return res.status(500).send("Cannot find Replies"); 
-  
+    if (!targetScript) return res.status(500).send("Cannot find Replies");
+
     targetScript.subplies.push({
       votes,
       userId,
-      translated
+      translated,
     });
-    
-    translation.save((err)=>{
-      if(err) return res.status(500).send(err);
+
+    translation.save((err) => {
+      if (err) return res.status(500).send(err);
       return res.send(translation);
     });
-  })
-})
+  });
+});
 
 router.post("/", (req, res) => {
   let translation = req.body;
@@ -124,6 +124,26 @@ router.patch("/subply/:videoId", (req, res) => {
       console.log(err);
       return res.status(500).send("Cannot find Translation");
     });
+});
+
+router.put("/vote/:videoId", (req, res) => {
+  const { videoId } = req.params;
+  const { scriptIndex, subplyId, userId } = req.body;
+
+  Translation.findOne({ videoId: videoId })
+    .then((translation) => {
+      let targetScript = translation.scripts[scriptIndex];
+      const found = targetScript.subplies.find(
+        (element) => element.id === subplyId
+      );
+      found.votes.addToSet(userId); // .push(userId);
+
+      translation.save((err) => {
+        if (err) return res.status(500).send(err);
+        return res.send(translation);
+      });
+    })
+    .catch((err) => console.log(err));
 });
 
 module.exports = router;
