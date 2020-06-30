@@ -133,10 +133,18 @@ router.put("/vote/:videoId", (req, res) => {
   Translation.findOne({ videoId: videoId })
     .then((translation) => {
       let targetScript = translation.scripts[scriptIndex];
-      const found = targetScript.subplies.find(
+
+      const subply = targetScript.subplies.find(
         (element) => element.id === subplyId
       );
-      found.votes.addToSet(userId); // .push(userId);
+
+      const user = subply.votes.find((user) => user === userId);
+
+      if (!user) {
+        subply.votes.push(userId);
+      } else {
+        subply.votes.pull(userId);
+      }
 
       translation.save((err) => {
         if (err) return res.status(500).send(err);
