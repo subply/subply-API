@@ -1,5 +1,6 @@
 var express = require("express");
 var router = express.Router();
+const multer = require('multer');
 var User = require("../models/user");
 
 // Index
@@ -30,10 +31,17 @@ router.get("/:userId", (req, res) => {
       res.status(500).send(err);
     });
 });
+const upload = multer({ dest: 'uploads/', limits: { fileSize: 5 * 1024 * 1024 } });
+app.post('/up', upload.single('img'), (req, res) => {
+  console.log(req.file); 
+});
 
 router.post("/", (req, res) => {
   console.log("Join in");
   const {name, id, password, nickname, profilePhoto} = req.body;
+
+  //profile photo 작업
+  console.log(req.body);
 
   const newUser = new User({
     name,
@@ -43,12 +51,12 @@ router.post("/", (req, res) => {
     profilePhoto: profilePhoto ? profilePhoto : null,
   });
 
-  newUser
-    .save()
-    .then((user) => {
-      if(user) return res.sendStatus(200);
-    })
-    .catch((err) => res.status(500).send(err));
+  // newUser
+  //   .save()
+  //   .then((user) => {
+  //     if(user) return res.sendStatus(200);
+  //   })
+  //   .catch((err) => res.status(500).send(err));
 });
 
 router.post("/login", async (req, res) => {
