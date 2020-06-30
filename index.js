@@ -2,6 +2,7 @@ const Express = require("express");
 const BodyParser = require("body-parser");
 const mongoose = require("mongoose");
 const app = Express();
+
 const cors = require("cors");
 const corsOptions = {
   origin: "http://localhost:4200",

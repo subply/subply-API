@@ -1,7 +1,9 @@
-var express = require("express");
-var router = express.Router();
+const express = require("express");
+const router = express.Router();
+let User = require("../models/user");
 const multer = require('multer');
-var User = require("../models/user");
+const storage = multer.memoryStorage();
+const upload = multer({ storage });
 
 // Index
 router.get("/", function (req, res, next) {
@@ -31,37 +33,30 @@ router.get("/:userId", (req, res) => {
       res.status(500).send(err);
     });
 });
-const upload = multer({ dest: 'uploads/', limits: { fileSize: 5 * 1024 * 1024 } });
-app.post('/up', upload.single('img'), (req, res) => {
-  console.log(req.file); 
-});
 
-router.post("/", (req, res) => {
+router.post("/", upload.single("profilePhoto"), (req, res) => {
   console.log("Join in");
-  const {name, id, password, nickname, profilePhoto} = req.body;
 
-  //profile photo 작업
-  console.log(req.body);
-
+  const { name, id, password, nickname } = req.body;
   const newUser = new User({
     name,
     userId: id,
-    password: password,
-    nickname: nickname,
-    profilePhoto: profilePhoto ? profilePhoto : null,
+    password,
+    nickname,
+    profilePhoto: req.file ? req.file.buffer : null,
   });
 
-  // newUser
-  //   .save()
-  //   .then((user) => {
-  //     if(user) return res.sendStatus(200);
-  //   })
-  //   .catch((err) => res.status(500).send(err));
+  newUser
+    .save((err) => {
+      if (err) return res.status(500).send(err);
+      return res.sendStatus(200);
+    })
+
 });
 
 router.post("/login", async (req, res) => {
   console.log("login in");
-  const {id, password} = req.body;
+  const { id, password } = req.body;
   try {
     const chk = await User.findOne({ userId: id }).then((user) => {
       if (!user) res.sendStatus(401).send("User Not Found");
