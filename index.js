@@ -1,12 +1,12 @@
-import { config } from "./config.json";
 const Express = require("express");
 const BodyParser = require("body-parser");
 const mongoose = require("mongoose");
 const app = Express();
 
 const cors = require("cors");
+const CORS_URL = "http://49.50.167.179:4200";
 const corsOptions = {
-  origin: config.CORS_URL,
+  origin: CORS_URL,
   Credentials: true,
 };
 const CONNECTION_URL =
@@ -48,6 +48,7 @@ db.once("open", function () {
 
 // Port setting
 var port = 3000;
-app.listen(port, config.HOSTNAME, function () {
-  console.log(`server on:) ${config.HOSTNAME} :  ${port}`);
+const HOSTNAME = "10.41.165.149";
+app.listen(port, HOSTNAME, function () {
+  console.log(`server on:) ${HOSTNAME} :  ${port}`);
 });
