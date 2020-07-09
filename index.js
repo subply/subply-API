@@ -1,3 +1,4 @@
+import { config } from "./config.json";
 const Express = require("express");
 const BodyParser = require("body-parser");
 const mongoose = require("mongoose");
@@ -5,7 +6,7 @@ const app = Express();
 
 const cors = require("cors");
 const corsOptions = {
-  origin: "http://localhost:4200",
+  origin: config.CORS_URL,
   Credentials: true,
 };
 const CONNECTION_URL =
@@ -15,6 +16,8 @@ mongoose.set("useFindAndModify", false);
 app.use(BodyParser.json());
 app.use(BodyParser.urlencoded({ extended: true }));
 app.use(function (req, res, next) {
+  // res.header("Access-Control-Allow-Origin", "*");
+  // res.header("Access-Control-Allow-Credentials", true);
   res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE");
   res.header(
     "Access-Control-Allow-Headers",
@@ -45,6 +48,6 @@ db.once("open", function () {
 
 // Port setting
 var port = 3000;
-app.listen(port, function () {
-  console.log("server on:) http://localhost:" + port);
+app.listen(port, config.HOSTNAME, function () {
+  console.log(`server on:) ${config.HOSTNAME} :  ${port}`);
 });
