@@ -4,7 +4,7 @@ const mongoose = require("mongoose");
 const app = Express();
 
 const cors = require("cors");
-const CORS_URL = "http://49.50.167.179:4200";
+const CORS_URL = "http://localhost:4200";
 const corsOptions = {
   origin: CORS_URL,
   Credentials: true,
@@ -48,7 +48,7 @@ db.once("open", function () {
 
 // Port setting
 var port = 3000;
-const HOSTNAME = "10.41.165.149";
-app.listen(port, HOSTNAME, function () {
-  console.log(`server on:) ${HOSTNAME} :  ${port}`);
+// const HOSTNAME = "10.41.165.149";
+app.listen(port, function () {
+  console.log(`server on:) ${port}`);
 });
