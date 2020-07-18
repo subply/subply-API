@@ -6,19 +6,24 @@ var UserInfoSchema = new mongoose.Schema({
     required: true,
   },
   votes: [{
-    type:String
+    type: String
   }],
   translate: [{
-    type:String
+    videoId: String,
+    title: String,
+    subplies: [{
+      raw: String,
+      translate: String
+    }]
   }],
   contributedTime: {
     type: Number,
     required: true,
   }
 },
-  { 
-  versionKey: false ,
-  collection: "UserInfo" 
+  {
+    versionKey: false,
+    collection: "UserInfo"
   });
 
 var UserInfo = mongoose.model("userInfo", UserInfoSchema);
