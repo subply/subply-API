@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 let User = require("../models/user");
 const multer = require('multer');
+const UserInfo = require("../models/userInfo");
 const storage = multer.memoryStorage();
 const upload = multer({ storage });
 
@@ -51,7 +52,7 @@ router.post("/", upload.single("profilePhoto"), (req, res) => {
       if (err) return res.status(500).send(err);
       return res.sendStatus(200);
     })
-
+    
 });
 
 router.post("/login", async (req, res) => {

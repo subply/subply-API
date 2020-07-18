@@ -26,10 +26,23 @@ router.get("/:userId", (req, res) => {
 });
 
 router.post("/", (req, res) => {
-  let userInfo = req.body;
-  userInfo
+  console.log("UserInfo in");
+  const { id } = req.body;
+
+  const newUserInfo = new UserInfo({
+    userId: id,
+    votes: [],
+    translate: [],
+    contributedTime: 0
+  })
+
+  newUserInfo
     .save()
-    .then((userInfo) => res.send(userInfo))
+    .then((userInfo) => {
+      if(userInfo){
+        res.send({result : 1});
+      }
+    })
     .catch((err) => {
       res.status(500).send(err);
     });
