@@ -20,9 +20,21 @@ router.get("/", function (req, res, next) {
 });
 
 router.get("/:userId", (req, res) => {
-    UserInfo.findOne({ userId: req.params.userId })
+  UserInfo.findOne({ userId: req.params.userId })
     .then((user) => res.send(user))
     .catch((err) => res.status(500).send(err));
+});
+
+router.get("/translates/:userId", (req, res) => {
+  let { userId } = req.params.userId;
+  UserInfo.findOne({ userId: userId })
+    .then((userInfo) => {
+      console.log(userInfo.translate);
+      res.send(userInfo.translate);
+    })
+    .catch((err) => {
+      res.status(500).send(err);
+    });
 });
 
 router.post("/", (req, res) => {
@@ -33,14 +45,14 @@ router.post("/", (req, res) => {
     userId: id,
     votes: [],
     translate: [],
-    contributedTime: 0
-  })
+    contributedTime: 0,
+  });
 
   newUserInfo
     .save()
     .then((userInfo) => {
-      if(userInfo){
-        res.send({result : 1});
+      if (userInfo) {
+        res.send({ result: 1 });
       }
     })
     .catch((err) => {
@@ -49,7 +61,7 @@ router.post("/", (req, res) => {
 });
 
 router.patch("/:userId", (req, res) => {
-    UserInfo.findByIdAndUpdate(req.params.userId, req.body)
+  UserInfo.findByIdAndUpdate(req.params.userId, req.body)
     .save()
     .then(() => res.send({ success: true }))
     .catch((err) => {
@@ -58,7 +70,7 @@ router.patch("/:userId", (req, res) => {
 });
 
 router.delete("/:userId", (req, res) => {
-    UserInfo.findOneAndRemove({ userId: req.params.userId })
+  UserInfo.findOneAndRemove({ userId: req.params.userId })
     .then(() => res.json({ success: true }))
     .catch((err) => {
       res.status(500).send(err);
