@@ -19,6 +19,38 @@ router.get("/", function (req, res, next) {
     });
 });
 
+router.patch("/", async (req, res)=> {
+  console.log("patch userinfo in");
+
+  const { userId, videoId, raw, translate, title } = req.body;
+  const user = await UserInfo.findOne({"userId" : userId});
+
+  const newTranslate = {
+    raw,
+    translate
+  }
+
+  const translateArray = user.translate.find((video)=> video.videoId === videoId);
+  
+  if(!translateArray){ 
+    //init translate
+    user.translate.push(
+      {
+        videoId,
+        title,
+        subplies : [newTranslate]
+      }
+    )
+  }else{
+    translate.subplies.push(newTranslate);
+  }
+
+  user.save().then((result, error)=> {
+    if(!result || error) return res.status(500).send(error);
+    res.sendStatus(200);
+  });
+});
+
 router.get("/:userId", (req, res) => {
     UserInfo.findOne({ userId: req.params.userId })
     .then((user) => res.send(user))
